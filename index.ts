@@ -8,7 +8,7 @@ import cors from 'cors';
 
 // console.log(`Mi nombre es ${ nombre }`);
 
-const server = new Server();
+const server = Server.instance;
 
 // BodyParser
 server.app.use(bodyParser.urlencoded({extended: true}));
