@@ -1,6 +1,17 @@
 import { Router, Request, Response } from 'express';
+import { v4 as uuidv4 } from 'uuid';
+
+const uuid4 = uuidv4();
 
 const router = Router();
+
+router.get('/', (req: Request, res: Response) => {    
+    res.json({
+        ok: true,
+        message: `Hello, ${uuid4}!`
+    });
+});
+
 
 router.get('/msg', (req: Request, res: Response) => {
 
@@ -10,6 +21,21 @@ router.get('/msg', (req: Request, res: Response) => {
     });
 
 });
+
+router.post('/msg', (req: Request, res: Response) => {
+
+    const cuerpo = req.body.cuerpo;
+    const de = req.body.de;
+
+    res.json({
+        ok: true,
+        message: 'POST - todo ok',
+        cuerpo,
+        de,
+    });
+
+});
+
 
 router.post('/msg/:id', (req: Request, res: Response) => {
 
