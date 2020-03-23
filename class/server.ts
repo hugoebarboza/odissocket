@@ -31,22 +31,27 @@ export default class Server {
     }
 
     private escucharSockets() {
+        
         console.log('escuchando conexiones');
+
         this.io.on('connection', cliente => {
 
             console.log('nuevo cliente conectado', cliente.id);
 
             // Conectar Cliente
-            socket.conectarCliente(cliente)
+            socket.conectarCliente(cliente, this.io);
 
             // Configurar Usuario
-            socket.configurarUsuario(cliente, this.io)
+            socket.configurarUsuario(cliente, this.io);
+
+            // Obtener Usuarios Activos
+            socket.obtenerUsuarios(cliente, this.io);
 
             // Pendiente de mensajes
             socket.mensaje(cliente, this.io);
 
             // Desconectar
-            socket.desconectar(cliente);
+            socket.desconectar(cliente, this.io);
 
 
         });

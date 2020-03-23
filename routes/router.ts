@@ -1,6 +1,9 @@
 import { Router, Request, Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 
+// CLASS
+import { usuariosConectados } from '../sockets/socket';
+
 // SERVER
 import Server from '../class/server';
 
@@ -66,6 +69,50 @@ router.post('/msg/:id', (req: Request, res: Response) => {
         cuerpo,
         de,
         id
+    });
+
+});
+
+// Get All Users
+router.get('/usuarios', (req: Request, res: Response) => {    
+
+    const server = Server.instance;
+
+    server.io.clients( (err: any, clientes: string[]) => {
+        if ( err ) {
+            return res.json ({
+                ok: false,
+                err
+            })
+        }
+
+        res.json({
+            ok: true,
+            clientes
+        });
+    });
+
+});
+
+
+
+// Get All Users and Detail
+router.get('/usuarios/detalle', (req: Request, res: Response) => {    
+
+    const server = Server.instance;
+
+    server.io.clients( (err: any, clientes: string[]) => {
+        if ( err ) {
+            return res.json ({
+                ok: false,
+                err
+            })
+        }
+
+        res.json({
+            ok: true,
+            clientes: usuariosConectados.getLista()
+        });
     });
 
 });
