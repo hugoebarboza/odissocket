@@ -11,7 +11,12 @@ const uuid4 = uuidv4();
 
 const router = Router();
 
-router.get('/', (req: Request, res: Response) => {    
+// router.use(auth);
+
+router.get('/', (req: Request, res: Response) => {
+
+    console.log('APP GET');
+
     res.json({
         ok: true,
         message: `Hello, ${uuid4}!`
@@ -57,7 +62,7 @@ router.post('/msg/:id', (req: Request, res: Response) => {
     const payload = {
         de,
         cuerpo
-    }
+    };
 
     const server = Server.instance;
 
@@ -74,7 +79,7 @@ router.post('/msg/:id', (req: Request, res: Response) => {
 });
 
 // Get All Users
-router.get('/usuarios', (req: Request, res: Response) => {    
+router.get('/usuarios', (req: Request, res: Response) => {
 
     const server = Server.instance;
 
@@ -83,7 +88,7 @@ router.get('/usuarios', (req: Request, res: Response) => {
             return res.json ({
                 ok: false,
                 err
-            })
+            });
         }
 
         res.json({
@@ -97,7 +102,7 @@ router.get('/usuarios', (req: Request, res: Response) => {
 
 
 // Get All Users and Detail
-router.get('/usuarios/detalle', (req: Request, res: Response) => {    
+router.get('/usuarios/detalle', (req: Request, res: Response) => {
 
     const server = Server.instance;
 
@@ -106,7 +111,7 @@ router.get('/usuarios/detalle', (req: Request, res: Response) => {
             return res.json ({
                 ok: false,
                 err
-            })
+            });
         }
 
         res.json({
@@ -117,5 +122,15 @@ router.get('/usuarios/detalle', (req: Request, res: Response) => {
 
 });
 
+function auth (req: Request, res: Response, next: any) {
+    if (req.body.Authorization) {
+        // res.send(req.body)
+        next();
+        return;
+    } else {
+        res.send('ERROR: No auth...');
+        return;
+    }
+}
 
 export default router;

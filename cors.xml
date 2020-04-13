@@ -1,0 +1,25 @@
+PUT /?cors HTTP/1.1
+Host: odissocket.appspot.com
+Date: Thu, 12 Mar 2020 03:38:42 GMT
+Content-Length: 1320
+Authorization: Bearer ya29.AHES6ZRVmB7fkLtd1XTmq6mo0S1wqZZi3-Lh_s-6Uw7p8vtgSwg
+
+<?xml version="1.0" encoding="UTF-8"?>
+<CorsConfig>
+  <Cors>
+    <Origins>
+      <Origin>*</Origin>
+    </Origins>
+    <Methods>
+      <Method>GET</Method>
+      <Method>HEAD</Method>
+      <Method>PUT</Method>
+      <Method>POST</Method>
+      <Method>DELETE</Method>
+    </Methods>
+    <ResponseHeaders>
+      <ResponseHeader>*</ResponseHeader>
+    </ResponseHeaders>
+    <MaxAgeSec>3600</MaxAgeSec>
+  </Cors>
+</CorsConfig>

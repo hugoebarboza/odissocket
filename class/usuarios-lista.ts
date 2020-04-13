@@ -1,4 +1,5 @@
 import { Usuario } from './usuario';
+import { User } from './types';
 
 
 export class UsuariosLista {
@@ -11,14 +12,18 @@ export class UsuariosLista {
     // Agregar un usuario
     public agregar( usuario: Usuario ) {
 
+        // console.log('===== Agregando usuario ====');
+        // console.log(usuario);
         this.lista.push( usuario );
-        console.log('===== Agregando usuario ====');
-        return usuario
+        return usuario;
     }
 
     public actualizarNombre( id: string, nombre: string ) {
 
-        for( let usuario of this.lista ) {
+        // console.log('===== Viene Actualizando usuario ====');
+
+        // tslint:disable-next-line:prefer-const
+        for ( let usuario of this.lista ) {
 
             if ( usuario.id === id ) {
                 usuario.nombre = nombre;
@@ -33,7 +38,7 @@ export class UsuariosLista {
 
     // Obtener lista de usuarios
     public getLista() {
-        return this.lista.filter ( usuario => usuario.nombre !== 'sin-nombre');
+        return this.lista.filter ( usuario => usuario.nombre !== 'sin-email');
     }
 
     // Obtener un usuario
@@ -46,14 +51,14 @@ export class UsuariosLista {
     // Obtener usuario en una sala en particular
     public getUsuariosEnSala( sala: string ) {
 
-        return this.lista.filter( usuario =>usuario.sala === sala );
+        return this.lista.filter( usuario => usuario.sala === sala );
 
     }
 
     // Borrar Usuario
     public borrarUsuario( id: string ) {
 
-        console.log('===== Borrando usuario ====');
+        // console.log('===== Borrando usuario ====');
         const tempUsuario = this.getUsuario( id );
 
         this.lista = this.lista.filter( usuario => usuario.id !== id );
@@ -61,8 +66,9 @@ export class UsuariosLista {
         console.log(this.lista);
 
         return tempUsuario;
-        
+
     }
 
 
 }
+

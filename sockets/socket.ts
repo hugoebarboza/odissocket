@@ -4,66 +4,157 @@ import socketIO from 'socket.io';
 // CLASS
 import { UsuariosLista } from '../class/usuarios-lista';
 import { Usuario } from '../class/usuario';
+import { User } from '../class/types';
+
 
 // Usuarios conectados
 export const usuariosConectados = new UsuariosLista();
 
-export const conectarCliente = (cliente: Socket, io: socketIO.Server) => {
+export const conectarCliente = async (cliente: Socket, io: socketIO.Server) => {
 
-    const usuario = new Usuario(cliente.id);
+    try {
 
-    usuariosConectados.agregar(usuario);
+        const usuario = new Usuario(cliente.id);
+        usuariosConectados.agregar(usuario);
+
+    } catch (err) {
+        console.log(err);
+    }
+
 };
 
-export const desconectar = (cliente: Socket, io: socketIO.Server) => {
-    cliente.on('disconnect', () => {
+export const desconectar = async (cliente: Socket, io: socketIO.Server) => {
 
-        console.log('Cliente desconectado', cliente.id);
+    try {
 
-        usuariosConectados.borrarUsuario(cliente.id);
+        cliente.on('disconnect', async () => {
 
-        io.emit('usuarios-activos', usuariosConectados.getLista());
-    });
+            // console.log('Cliente desconectado', cliente.id);
+
+            usuariosConectados.borrarUsuario(cliente.id);
+
+            io.emit('usuarios-activos', usuariosConectados.getLista());
+        });
+
+    } catch (err) {
+        console.log(err);
+    }
+
 };
 
 // Escuchar mensajes
-export const mensaje = (cliente: Socket, io: socketIO.Server) => {
-    cliente.on('mensaje', (payload: {de: string, cuerpo: string}, callback) => {
-        console.log('mensaje recibido', payload);
+export const mensaje = async (cliente: Socket, io: socketIO.Server) => {
 
-        io.emit('mensaje-nuevo', payload);
-    });
+    try {
+
+        cliente.on('mensaje', (payload: {de: string, cuerpo: string}, callback) => {
+
+            console.log('mensaje recibido', payload);
+
+            io.emit('mensaje-nuevo', payload);
+        });
+
+    } catch (err) {
+        console.log(err);
+    }
+
 };
 
 // Escuchar usuario
-export const configurarUsuario = (cliente: Socket, io: socketIO.Server) => {
+export const configurarUsuario = async (cliente: Socket, io: socketIO.Server) => {
 
-    cliente.on('configurar-usuario', (payload: {nombre: string}, callback: Function) => {
+    try {
 
-        console.log('Configurando usuario', payload);
+        // tslint:disable-next-line:ban-types
+        cliente.on('configurar-usuario', (payload: {nombre: string}, callback: Function) => {
 
-        usuariosConectados.actualizarNombre(cliente.id, payload.nombre);
+            // console.log('Configurando usuario', payload.usuario);
 
-        io.emit('usuarios-activos', usuariosConectados.getLista());
+            usuariosConectados.actualizarNombre(cliente.id, payload.nombre);
 
-        callback({
-            ok: true,
-            mensaje: `Usuario ${ payload.nombre }, configurado`
-        }
-        )
+            io.emit('usuarios-activos', usuariosConectados.getLista());
 
-        // io.emit('configurar-usuario', payload);
-    });
+            callback({
+                ok: true,
+                mensaje: `Usuario ${ payload.nombre }, configurado`
+            }
+            );
+
+            // io.emit('configurar-usuario', payload);
+        });
+
+    } catch (err) {
+        console.log(err);
+    }
+
 };
 
 
 // Obtener Usuarios
-export const obtenerUsuarios = (cliente: Socket, io: socketIO.Server) => {
-    cliente.on('obtener-usuarios', () => {
+export const obtenerUsuarios = async (cliente: Socket, io: socketIO.Server) => {
 
-
+    try {
+        cliente.on('obtener-usuarios', () => {
         io.to(cliente.id).emit('usuarios-activos', usuariosConectados.getLista());
+        });
+    } catch (err) {
+        console.log(err);
+    }
+
+};
+
+// Listen Store Order
+export const storeOrder = async (cliente: Socket, io: socketIO.Server) => {
+
+    try {
+
+        // tslint:disable-next-line:ban-types
+        cliente.on('store-order', (payload: { userid: number, serviceid: number, orderid: number }, callback: Function) => {
+
+            io.emit('store-order-completed', payload);
+
+        });
+
+    } catch (err) {
+        console.log(err);
+    }
+
+};
 
 
-    });
+// Listen Update Order
+export const updateOrder = async (cliente: Socket, io: socketIO.Server) => {
+
+    try {
+
+        // tslint:disable-next-line:ban-types
+        cliente.on('update-order', (payload: { serviceid: number, orderid: number }, callback: Function) => {
+
+            io.emit('update-order-completed', payload);
+
+        });
+
+    } catch (err) {
+        console.log(err);
+    }
+
+};
+
+
+// Listen Update Order
+export const deleteOrder = async (cliente: Socket, io: socketIO.Server) => {
+
+    try {
+
+        // tslint:disable-next-line:ban-types
+        cliente.on('delete-order', (payload: { serviceid: number, orderid: number }, callback: Function) => {
+
+            io.emit('delete-order-completed', payload);
+
+        });
+
+    } catch (err) {
+        console.log(err);
+    }
+
 };
